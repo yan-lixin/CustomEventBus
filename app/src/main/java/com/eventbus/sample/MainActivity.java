@@ -1,15 +1,15 @@
 package com.eventbus.sample;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.eventbus.library.EventBus;
-import com.eventbus.library.annotation.Subscribe;
-import com.eventbus.library.mode.ThreadMode;
+import com.eventbus.EventBus;
+import com.eventbus.annotation.Subscribe;
+import com.eventbus.annotation.mode.ThreadMode;
 import com.eventbus.sample.model.EventBean;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        EventBus.getDefault().addIndex(new EventBusIndex());
         EventBus.getDefault().register(this);
 
         mTextView = findViewById(R.id.subscribeText);
@@ -31,8 +32,20 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    @Subscribe(threadModel = ThreadMode.MAIN)
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(EventBean eventBean) {
+        Log.e("TAG", "接收到事件");
         mTextView.setText(eventBean.getDes());
     }
+
+    public void onSticky(View view) {
+        EventBus.getDefault().postSticky(new EventBean("发布的粘性事件"));
+    }
+
+
 }

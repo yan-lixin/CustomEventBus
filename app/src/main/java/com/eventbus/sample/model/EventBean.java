@@ -21,4 +21,11 @@ public class EventBean {
     public void setDes(String des) {
         this.des = des;
     }
+
+    @Override
+    public String toString() {
+        return "EventBean{" +
+                "des='" + des + '\'' +
+                '}';
+    }
 }
